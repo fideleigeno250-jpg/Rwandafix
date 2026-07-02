@@ -1,144 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Employee Salary Report</title>
-
-    <style>
-        body
-        {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 40px;
-        }
-
-        .container
-        {
-            width: 80%;
-            margin: auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px gray;
-        }
-
-        h2
-        {
-            text-align: center;
-            color: darkblue;
-        }
-
-        table
-        {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th
-        {
-            background-color: darkblue;
-            color: white;
-            padding: 12px;
-        }
-
-        td
-        {
-            text-align: center;
-            padding: 10px;
-        }
-
-        tr:nth-child(even)
-        {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover
-        {
-            background-color: #d9edf7;
-        }
-
-        h3
-        {
-            text-align: center;
-            color: green;
-        }
-    </style>
+<title>Employee Salary Report</title>
 </head>
 
-<body>
+<body bgcolor="lightblue">
 
-<div class="container">
-
-<h2>Employee Salary Report</h2>
-
-<table border="1">
-
-<tr>
-    <th>Employee Name</th>
-    <th>Gross Salary (FRW)</th>
-    <th>Tax (%)</th>
-    <th>Net Salary (FRW)</th>
-</tr>
+<center>
+<h2><font color="darkblue">EMPLOYEE SALARY REPORT</font></h2>
+<p><b>Date:</b> <script>document.write(new Date().toLocaleDateString());</script></p>
+</center>
 
 <script>
 
-var Employee;
-var GrossSalary;
-var Tax;
-var NetSalary;
+var Employee, GrossSalary, Tax, NetSalary;
 var NumberOfEmployees;
-var i;
+var TotalGross = 0, TotalNet = 0;
+var Highest = 0, Lowest = 999999999;
 
-function DisplaySalary()
+function Money(x)
 {
-    if (GrossSalary <= 0)
-    {
-        document.write("<tr>");
-        document.write("<td>" + Employee + "</td>");
-        document.write("<td colspan='3'>Invalid Gross Salary</td>");
-        document.write("</tr>");
-    }
-    else
-    {
-        if (GrossSalary > 100000)
-        {
-            Tax = 0.20;
-        }
-        else
-        {
-            Tax = 0;
-        }
-
-        NetSalary = GrossSalary - (GrossSalary * Tax);
-
-        document.write("<tr>");
-        document.write("<td>" + Employee + "</td>");
-        document.write("<td>" + GrossSalary + "</td>");
-        document.write("<td>" + (Tax * 100) + "%</td>");
-        document.write("<td>" + NetSalary + "</td>");
-        document.write("</tr>");
-    }
+    return x.toLocaleString() + " FRW";
 }
+
+function Display()
+{
+    Tax = GrossSalary > 100000 ? 0.20 : 0;
+    NetSalary = GrossSalary - GrossSalary * Tax;
+
+    TotalGross += GrossSalary;
+    TotalNet += NetSalary;
+
+    if(GrossSalary > Highest)
+        Highest = GrossSalary;
+
+    if(GrossSalary < Lowest)
+        Lowest = GrossSalary;
+
+    document.write("<tr>");
+    document.write("<td>"+i+"</td>");
+    document.write("<td>"+Employee+"</td>");
+    document.write("<td>"+Money(GrossSalary)+"</td>");
+    document.write("<td>"+(Tax*100)+"%</td>");
+    document.write("<td>"+Money(NetSalary)+"</td>");
+    document.write("</tr>");
+}
+
+alert("Welcome to Employee Salary Report");
 
 NumberOfEmployees = Number(prompt("Enter Number of Employees"));
 
-for(i = 1; i <= NumberOfEmployees; i++)
+document.write("<table border='1' width='80%' align='center' cellpadding='8'>");
+document.write("<tr bgcolor='skyblue'>");
+document.write("<th>No</th>");
+document.write("<th>Employee</th>");
+document.write("<th>Gross Salary</th>");
+document.write("<th>Tax</th>");
+document.write("<th>Net Salary</th>");
+document.write("</tr>");
+
+for(i=1;i<=NumberOfEmployees;i++)
 {
-    Employee = prompt("Enter Employee " + i + " Name");
-    GrossSalary = Number(prompt("Enter Employee " + i + " Gross Salary"));
-    DisplaySalary();
+    Employee = prompt("Employee "+i+" Name");
+    GrossSalary = Number(prompt("Employee "+i+" Gross Salary"));
+
+    if(GrossSalary>0)
+        Display();
+    else
+    {
+        document.write("<tr>");
+        document.write("<td>"+i+"</td>");
+        document.write("<td>"+Employee+"</td>");
+        document.write("<td colspan='3'>Invalid Salary</td>");
+        document.write("</tr>");
+    }
 }
 
+document.write("</table><br>");
+
+document.write("<table border='1' align='center' cellpadding='8' width='50%' bgcolor='white'>");
+document.write("<tr bgcolor='lightgreen'><th colspan='2'>REPORT SUMMARY</th></tr>");
+document.write("<tr><td>Employees</td><td>"+NumberOfEmployees+"</td></tr>");
+document.write("<tr><td>Total Gross Salary</td><td>"+Money(TotalGross)+"</td></tr>");
+document.write("<tr><td>Total Net Salary</td><td>"+Money(TotalNet)+"</td></tr>");
+document.write("<tr><td>Average Gross Salary</td><td>"+Money(TotalGross/NumberOfEmployees)+"</td></tr>");
+document.write("<tr><td>Average Net Salary</td><td>"+Money(TotalNet/NumberOfEmployees)+"</td></tr>");
+document.write("<tr><td>Highest Salary</td><td>"+Money(Highest)+"</td></tr>");
+document.write("<tr><td>Lowest Salary</td><td>"+Money(Lowest)+"</td></tr>");
+document.write("</table>");
+
+alert("Report Generated Successfully");
+
 </script>
-
-</table>
-
-<br>
-
-<h3>End of Employee Salary Report</h3>
-
-</div>
 
 </body>
 </html>
